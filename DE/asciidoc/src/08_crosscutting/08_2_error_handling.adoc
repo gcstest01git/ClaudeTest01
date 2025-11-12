@@ -1,0 +1,17 @@
+=== 8.2 Fehlerbehandlung
+
+==== Fehlerbehandlungsstrategie
+
+[TBD: Allgemeine Fehlerbehandlungsstrategie beschreiben]
+
+==== Fehlertypen
+
+[TBD: Kategorisierung von Fehlertypen]
+
+==== Retry-Mechanismen
+
+[TBD: Retry-Strategien dokumentieren]
+
+==== Fehler-Reporting
+
+[TBD: Fehler-Reporting und Alerting beschreiben]

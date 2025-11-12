@@ -1,0 +1,23 @@
+== 10. Qualitätsanforderungen
+
+=== 10.1 Qualitätsbaum
+
+[TBD: Qualitätsbaum mit wichtigsten Qualitätszielen erstellen]
+
+=== 10.2 Qualitätsszenarien
+
+==== Performance
+
+[TBD: Performance-Szenarien beschreiben]
+
+==== Verfügbarkeit
+
+[TBD: Verfügbarkeits-Szenarien beschreiben]
+
+==== Sicherheit
+
+[TBD: Sicherheits-Szenarien beschreiben]
+
+==== Wartbarkeit
+
+[TBD: Wartbarkeits-Szenarien beschreiben]

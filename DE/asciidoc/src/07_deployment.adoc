@@ -1,0 +1,17 @@
+== 7. Verteilungssicht
+
+=== 7.1 Infrastrukturübersicht
+
+[TBD: Überblick über die Infrastruktur geben]
+
+=== 7.2 Deployment-Architektur
+
+[TBD: Deployment-Architektur beschreiben]
+
+=== 7.3 Umgebungen
+
+[TBD: Verschiedene Umgebungen (Dev, Test, Prod) dokumentieren]
+
+=== 7.4 Skalierung
+
+[TBD: Skalierungsstrategien beschreiben]

@@ -1,0 +1,13 @@
+== 4. Lösungsstrategie
+
+=== 4.1 Technologieentscheidungen
+
+[TBD: Wesentliche Technologieentscheidungen dokumentieren]
+
+=== 4.2 Architekturansatz
+
+[TBD: Architekturmuster und -prinzipien beschreiben]
+
+=== 4.3 Top-Level-Zerlegung
+
+[TBD: Überblick über die Systemzerlegung geben]

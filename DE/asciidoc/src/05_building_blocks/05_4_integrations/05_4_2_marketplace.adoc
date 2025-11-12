@@ -1,0 +1,17 @@
+==== 5.4.2 Marktplatz-Integration
+
+===== Zweck
+
+[TBD: Zweck der Marktplatz-Integration beschreiben]
+
+===== Zuständigkeiten
+
+[TBD: Verantwortlichkeiten auflisten]
+
+===== Schnittstellen
+
+[TBD: API-Schnittstellen dokumentieren]
+
+===== Fehlerbehandlung
+
+[TBD: Fehlerszenarien und Maßnahmen beschreiben]

@@ -1,0 +1,17 @@
+=== 5.2 Frontend
+
+==== Zweck
+
+[TBD: Zweck der Frontend-Komponente beschreiben]
+
+==== Zuständigkeiten
+
+[TBD: Hauptverantwortlichkeiten des Frontends auflisten]
+
+==== Schnittstellen
+
+[TBD: API-Schnittstellen zum Backend dokumentieren]
+
+==== Technologiestack
+
+[TBD: Verwendete Frontend-Technologien auflisten]

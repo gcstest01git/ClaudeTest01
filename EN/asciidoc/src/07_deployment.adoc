@@ -1,0 +1,17 @@
+== 7. Deployment View
+
+=== 7.1 Infrastructure Overview
+
+[TBD: Provide infrastructure overview]
+
+=== 7.2 Deployment Architecture
+
+[TBD: Describe deployment architecture]
+
+=== 7.3 Environments
+
+[TBD: Document different environments (Dev, Test, Prod)]
+
+=== 7.4 Scaling
+
+[TBD: Describe scaling strategies]

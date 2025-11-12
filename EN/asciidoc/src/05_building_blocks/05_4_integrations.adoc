@@ -1,0 +1,11 @@
+=== 5.4 External Integrations
+
+==== Overview
+
+The system integrates with several external services and systems:
+
+* **Stripe**: Payment processing
+* **Marketplace Systems**: Product synchronization and order management
+* **ERP Systems**: Business process integration
+
+[TBD: Detailed overview of all integrations]

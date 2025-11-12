@@ -1,0 +1,13 @@
+=== 5.1 Systemübersicht
+
+==== Whitebox Gesamtsystem
+
+[TBD: Überblick über die Hauptkomponenten des Systems geben]
+
+==== Enthaltene Bausteine
+
+[TBD: Liste der Hauptbausteine]
+
+==== Wichtige Schnittstellen
+
+[TBD: Wesentliche Schnittstellen zwischen den Bausteinen]

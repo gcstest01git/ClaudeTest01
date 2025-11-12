@@ -1,0 +1,17 @@
+=== 5.5 Datenschicht
+
+==== Zweck
+
+[TBD: Zweck der Datenschicht beschreiben]
+
+==== Datenbank-Architektur
+
+[TBD: Datenbankarchitektur beschreiben]
+
+==== Datenmodell
+
+[TBD: Wichtige Entitäten und Beziehungen dokumentieren]
+
+==== Datenzugriff
+
+[TBD: Datenzugriffsmuster und -technologien beschreiben]

@@ -1,0 +1,218 @@
+==== 5.4.1 Stripe Payment Integration
+
+===== Purpose
+
+Integration of the Stripe payment platform for secure credit card and wallet payments in the B2B context. Stripe significantly reduces PCI-DSS compliance effort as sensitive card data never reaches our servers.
+
+===== Responsibilities
+
+* **Payment Processing**: Credit cards (Visa, Mastercard, Amex), digital wallets (Apple Pay, Google Pay), SEPA direct debit
+* **Tokenization**: Secure storage of payment methods for recurring payments
+* **Webhook Processing**: Asynchronous notifications about payment status changes
+* **Refund Management**: Full and partial refunds with audit trail
+* **Fraud Prevention**: Integration with Stripe Radar for automatic fraud analysis
+* **Compliance**: PCI-DSS Level 1 certification through Stripe, GDPR-compliant data storage
+
+===== Interfaces
+
+====== Flow: Checkout Session
+
+The following sequence diagram shows the typical payment processing flow:
+
+[plantuml,stripe-payment-sequence-en,png]
+----
+@startuml
+actor Customer
+participant "Frontend\n(React)" as FE
+participant "Backend API\n(Node.js)" as BE
+participant "Database\n(PostgreSQL)" as DB
+participant "Stripe API" as Stripe
+
+Customer -> FE: Click "Checkout"
+FE -> BE: POST /api/checkout/session\n{orderId, amount, currency}
+BE -> DB: Validate order
+DB -> BE: Order details
+BE -> Stripe: stripe.checkout.sessions.create()
+Stripe -> BE: Session {id, url}
+BE -> DB: Save session ID
+BE -> FE: {checkoutUrl}
+FE -> Customer: Redirect to Stripe
+Customer -> Stripe: Enter payment details
+Stripe -> Stripe: Validation & payment
+Stripe -> BE: Webhook: payment_intent.succeeded
+BE -> DB: Mark order as "paid"
+BE -> BE: Trigger ERP sync job
+Stripe -> Customer: Show success page
+@enduml
+----
+
+====== API Endpoints
+
+**Backend API:**
+
+[cols="2,3,5",options="header"]
+|===
+|Method |Endpoint |Description
+
+|POST
+|`/api/checkout/session`
+|Creates a new Stripe Checkout session for an order. Expects: `orderId`, `successUrl`, `cancelUrl`
+
+|POST
+|`/api/webhooks/stripe`
+|Receives Stripe webhooks (signed with webhook secret). Processes events like `payment_intent.succeeded`, `payment_intent.failed`
+
+|POST
+|`/api/payments/refund`
+|Creates refund via Stripe API. Expects: `paymentIntentId`, `amount` (optional for partial refund)
+
+|GET
+|`/api/payments/{orderId}/status`
+|Returns current payment status for an order: `pending`, `processing`, `succeeded`, `failed`
+|===
+
+**Stripe API Calls:**
+
+* `stripe.checkout.sessions.create()` - Session initialization
+* `stripe.paymentIntents.retrieve()` - Status polling
+* `stripe.refunds.create()` - Refunds
+* `stripe.customers.create()` - Customer profile for recurring payments
+
+====== Data Flow
+
+**Persisted Data:**
+
+[cols="2,3,3",options="header"]
+|===
+|Field |Type |Description
+
+|`stripe_session_id`
+|VARCHAR(255)
+|Stripe Checkout Session ID
+
+|`stripe_payment_intent_id`
+|VARCHAR(255)
+|Stripe Payment Intent ID (after successful payment)
+
+|`stripe_customer_id`
+|VARCHAR(255)
+|Stripe Customer ID for recurring payments
+
+|`payment_status`
+|ENUM
+|`pending`, `processing`, `succeeded`, `failed`, `refunded`
+
+|`payment_method`
+|VARCHAR(50)
+|Payment method: `card`, `sepa_debit`, `apple_pay`, etc.
+
+|`amount_cents`
+|INTEGER
+|Amount in cents (Stripe format)
+
+|`currency`
+|CHAR(3)
+|Currency code (ISO 4217): `EUR`, `USD`, `GBP`
+|===
+
+===== Error Handling
+
+The following table describes typical error scenarios and their handling:
+
+[cols="2,3,3",options="header"]
+|===
+|Error Type |Cause |Action
+
+|`payment_failed`
+|Card declined (insufficient funds, limit exceeded)
+|Inform user via frontend error message, offer alternative payment method, order remains in "pending" status
+
+|`card_declined`
+|Issuing bank rejects transaction
+|Forward Stripe error message to user, logging for fraud analysis, temporary lock after 3 failed attempts
+
+|`webhook_timeout`
+|Webhook from Stripe not received within 5 minutes
+|Automatic polling of Payment Intent status every 30 seconds (max. 10 attempts), alert to operations team after 3 minutes
+
+|`webhook_signature_invalid`
+|Webhook signature does not match
+|Reject request (HTTP 401), security alert to DevOps, potential attack attempt
+
+|`invalid_api_key`
+|Stripe API key invalid or expired
+|Alert to DevOps (critical), automatic fallback to maintenance mode, no new checkout sessions
+
+|`rate_limit_exceeded`
+|Too many API requests (>100/second)
+|Exponential backoff (2s, 4s, 8s), request queuing, cache for repeated queries
+
+|`refund_failed`
+|Refund not possible (e.g., original payment too old)
+|Manual processing required, ticket to finance team, inform customer via email
+
+|`insufficient_funds`
+|SEPA direct debit failed
+|Keep order in "payment_pending", automatic retry after 3 days, contact customer via email
+|===
+
+image::../../../../images/EN/stripe-error-handling-en.png[Error Handling Overview,700,align=center]
+
+===== Security
+
+**Best Practices:**
+
+* API keys stored as environment variables (never in code)
+* Webhook signature validation with `stripe.webhooks.constructEvent()`
+* HTTPS-only for all API calls (TLS 1.2+)
+* Idempotency keys for all create operations
+* Customer IP address transmitted to Stripe for fraud detection
+* Rate limiting at backend level (100 requests/minute per customer)
+
+**PCI-DSS Compliance:**
+
+Through Stripe Checkout and Payment Intents, we achieve PCI-DSS SAQ-A level (simplest form) because:
+* No card data touches our servers
+* Stripe Hosted Checkout page is used
+* Tokenization completely handled by Stripe
+
+===== Monitoring & Alerting
+
+**Metrics:**
+
+* `stripe_payment_success_rate`: Payment success rate (target: >95%)
+* `stripe_webhook_processing_time`: Average webhook processing time (target: <500ms)
+* `stripe_api_error_rate`: Stripe API error rate (target: <1%)
+* `stripe_refund_volume`: Daily refunds (alert at >5% of revenue)
+
+**Alerts:**
+
+* Webhook processing time >2 seconds → Warning
+* Webhook not received after 5 minutes → Critical
+* Payment success rate <90% → Critical
+* API error rate >5% → Warning
+
+===== Configuration
+
+**Environment Variables:**
+
+[source,bash]
+----
+STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_API_VERSION=2023-10-16
+----
+
+**Feature Flags:**
+
+* `STRIPE_RADAR_ENABLED`: Enables fraud analysis (Prod: true, Dev: false)
+* `STRIPE_3DS_REQUIRED`: Enforces 3D Secure for all payments (EU compliance)
+* `STRIPE_AUTO_CAPTURE`: Automatic payment capture vs. manual (default: true)
+
+===== References
+
+* Stripe API Documentation: https://stripe.com/docs/api
+* Stripe Checkout Guide: https://stripe.com/docs/payments/checkout
+* Webhook Best Practices: https://stripe.com/docs/webhooks/best-practices
+* PCI-DSS Compliance: https://stripe.com/docs/security/guide

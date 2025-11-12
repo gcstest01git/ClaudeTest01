@@ -1,0 +1,13 @@
+== 4. Solution Strategy
+
+=== 4.1 Technology Decisions
+
+[TBD: Document key technology decisions]
+
+=== 4.2 Architectural Approach
+
+[TBD: Describe architectural patterns and principles]
+
+=== 4.3 Top-Level Decomposition
+
+[TBD: Provide overview of system decomposition]

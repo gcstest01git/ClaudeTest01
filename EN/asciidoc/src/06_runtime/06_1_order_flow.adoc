@@ -1,0 +1,357 @@
+=== 6.1 Order Flow (Order → Payment → ERP)
+
+==== Scenario
+
+This flow describes the end-to-end process of a B2B order from shopping cart to ERP synchronization. It is the critical business process that integrates all main components of the system.
+
+**Actors:**
+
+* **B2B Customer**: Employee of a customer company placing an order
+* **System**: Backend API, Database, Stripe Integration
+* **ERP System**: SAP or Microsoft Dynamics for order processing and inventory management
+
+==== Flow
+
+The following sequence diagram shows the complete order flow:
+
+[plantuml,order-flow-sequence-en,png]
+----
+@startuml
+actor "B2B Customer" as Customer
+participant "Frontend" as FE
+participant "Backend API" as BE
+participant "Database" as DB
+participant "Stripe API" as Stripe
+participant "Message Queue\n(RabbitMQ)" as MQ
+participant "ERP Connector" as ERP
+
+== Phase 1: Create Order ==
+Customer -> FE: Complete shopping cart
+FE -> BE: POST /api/orders\n{items, deliveryAddress, customerId}
+BE -> DB: Create order (Status: draft)
+BE -> DB: Check inventory
+DB -> BE: Availability confirmed
+BE -> DB: Status: pending_payment
+BE -> FE: {orderId, totalAmount}
+
+== Phase 2: Payment ==
+FE -> BE: POST /api/checkout/session\n{orderId}
+BE -> Stripe: Create Checkout Session
+Stripe -> BE: {sessionId, checkoutUrl}
+BE -> DB: Save session ID
+BE -> FE: {checkoutUrl}
+FE -> Customer: Redirect to Stripe
+Customer -> Stripe: Complete payment
+Stripe -> BE: Webhook: payment_intent.succeeded
+BE -> DB: Status: payment_confirmed
+BE -> MQ: Publish OrderPaidEvent
+
+== Phase 3: ERP Synchronization ==
+MQ -> ERP: Consume OrderPaidEvent
+ERP -> ERP: Transform order data\n(API format → SAP format)
+ERP -> "SAP/Dynamics" as SAPSYSTEM: Create Sales Order
+SAPSYSTEM -> ERP: {erpOrderId, confirmationNumber}
+ERP -> DB: Save ERP IDs
+ERP -> MQ: Publish ERPSyncCompletedEvent
+BE -> Customer: Email: Order confirmation\nwith ERP order number
+
+== Phase 4: Status Updates ==
+SAPSYSTEM -> ERP: Webhook: Status Update\n(Shipped, Delivered)
+ERP -> DB: Update delivery status
+ERP -> BE: Push notification
+BE -> Customer: Email: Shipping notification
+@enduml
+----
+
+==== Detailed Flow
+
+===== Phase 1: Create Order
+
+**Step 1**: Customer completes shopping cart
+
+* Frontend validates cart (minimum order value, complete delivery address)
+* `POST /api/orders` is called with order data
+
+**Step 2**: Backend creates order
+
+[source,javascript]
+----
+// Pseudo-code
+async function createOrder(orderData) {
+  // Start transaction
+  const order = await db.orders.create({
+    customerId: orderData.customerId,
+    status: 'draft',
+    items: orderData.items,
+    deliveryAddress: orderData.deliveryAddress,
+    totalAmountCents: calculateTotal(orderData.items)
+  });
+
+  // Check inventory
+  for (const item of orderData.items) {
+    const stock = await inventoryService.checkAvailability(item.productId, item.quantity);
+    if (!stock.available) {
+      throw new InsufficientStockError(item.productId);
+    }
+  }
+
+  // Set status to pending_payment
+  await order.update({ status: 'pending_payment' });
+
+  return order;
+}
+----
+
+**Step 3**: Reserve inventory
+
+* Soft-reservation for 30 minutes
+* Automatic release if payment not completed
+
+===== Phase 2: Payment Processing
+
+**Step 4**: Create Stripe Checkout Session
+
+* Backend calls `stripe.checkout.sessions.create()`
+* Session configuration:
+** `mode: 'payment'`
+** `payment_method_types: ['card', 'sepa_debit']`
+** `success_url`: Success page with order ID
+** `cancel_url`: Shopping cart page
+
+**Step 5**: Customer enters payment details
+
+* Redirect to Stripe Hosted Checkout
+* PCI-compliance through Stripe
+* 3D Secure (SCA) when required
+
+**Step 6**: Webhook processing
+
+[source,javascript]
+----
+// Webhook handler
+async function handleStripeWebhook(event) {
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object;
+    const order = await db.orders.findByStripeSessionId(paymentIntent.id);
+
+    // Transaction for atomicity
+    await db.transaction(async (trx) => {
+      await order.update({
+        status: 'payment_confirmed',
+        stripePaymentIntentId: paymentIntent.id,
+        paidAt: new Date()
+      }, { transaction: trx });
+
+      // Publish event for ERP sync
+      await messageQueue.publish('order.paid', {
+        orderId: order.id,
+        customerId: order.customerId,
+        totalAmount: order.totalAmountCents
+      });
+    });
+
+    // Send confirmation email (asynchronous)
+    await emailService.sendOrderConfirmation(order.id);
+  }
+}
+----
+
+===== Phase 3: ERP Synchronization
+
+**Step 7**: ERP connector processes event
+
+* Consumes `OrderPaidEvent` from message queue
+* Data transformation: REST API format → SAP BAPI format
+* Retry logic on errors (exponential backoff)
+
+**Step 8**: Create SAP Sales Order
+
+[source,javascript]
+----
+// ERP Connector
+async function syncOrderToSAP(orderData) {
+  const sapPayload = {
+    SALES_ORG: 'DE01',
+    DISTRIBUTION_CHANNEL: '10',
+    DIVISION: '00',
+    SOLD_TO_PARTY: mapCustomerToSAPId(orderData.customerId),
+    ITEMS: orderData.items.map(item => ({
+      MATERIAL: item.sku,
+      TARGET_QTY: item.quantity,
+      PLANT: determineWarehouse(orderData.deliveryAddress)
+    }))
+  };
+
+  const response = await sapClient.post('/sap/bc/srt/rfc/sap/BAPI_SALESORDER_CREATEFROMDAT2', sapPayload);
+
+  if (response.status === 'SUCCESS') {
+    // Save ERP IDs to database
+    await db.orders.update(orderData.orderId, {
+      erpOrderId: response.SALESORDER,
+      erpSyncedAt: new Date(),
+      erpStatus: 'confirmed'
+    });
+
+    // Event for completed synchronization
+    await messageQueue.publish('erp.sync.completed', {
+      orderId: orderData.orderId,
+      erpOrderId: response.SALESORDER
+    });
+  } else {
+    throw new ERPSyncError(response.error);
+  }
+}
+----
+
+**Step 9**: Customer receives order confirmation
+
+* Email with ERP order number
+* Link to order tracking portal
+* Estimated delivery time
+
+===== Phase 4: Status Updates
+
+**Step 10**: SAP sends status updates
+
+* Webhook or polling (every 15 minutes)
+* Status: `in_picking`, `shipped`, `delivered`
+* Tracking number from logistics partner
+
+**Step 11**: Customer receives notifications
+
+* Email on status changes
+* Push notification in mobile app (if enabled)
+* SMS on delivery (optional)
+
+==== Error Scenarios
+
+===== Scenario 1: Payment failed
+
+[cols="1,3",options="header"]
+|===
+|Step |Action
+
+|Webhook: `payment_intent.failed`
+|Order remains in status `pending_payment`
+
+|Soft-reservation expires
+|Inventory released after 30 minutes
+
+|Customer notification
+|Email with link to retry payment
+
+|Retry option
+|Customer can retry payment within 7 days
+|===
+
+===== Scenario 2: ERP synchronization failed
+
+[cols="1,3",options="header"]
+|===
+|Step |Action
+
+|SAP unreachable
+|Retry with exponential backoff (max. 10 attempts over 2 hours)
+
+|After all retries failed
+|Alert to operations team, manual processing required
+
+|Order status
+|Remains in `payment_confirmed`, flag: `erp_sync_pending`
+
+|Customer
+|Receives confirmation that payment successful, processing in progress
+|===
+
+===== Scenario 3: Inventory exhausted in the meantime
+
+[cols="1,3",options="header"]
+|===
+|Step |Action
+
+|Detection
+|During ERP sync, SAP determines: Material not available
+
+|ERP response
+|Error code `INSUFFICIENT_STOCK`
+
+|Automatic action
+|Partial delivery or backorder creation in SAP
+
+|Customer
+|Email with new delivery time, option to cancel with refund
+|===
+
+==== Monitoring & Metrics
+
+**Key Performance Indicators:**
+
+* **Order-to-Payment Time**: Average time from order creation to payment confirmation (target: <5 minutes)
+* **Payment-to-ERP-Sync Time**: Time from payment confirmation to ERP entry (target: <2 minutes)
+* **ERP Sync Success Rate**: Percentage of successful synchronizations on first attempt (target: >98%)
+* **End-to-End Order Time**: Total time until delivery (target: <48 hours)
+
+**Alerts:**
+
+* ERP sync failed >3 times in 10 minutes → Critical
+* Order-to-Payment Time >15 minutes → Warning
+* Webhook processing time >5 seconds → Warning
+* Inventory discrepancy between system and ERP → Daily report
+
+==== Data Model
+
+**Order Status Transitions:**
+
+[source,text]
+----
+draft
+  ↓
+pending_payment
+  ↓
+payment_confirmed
+  ↓
+erp_synced
+  ↓
+in_picking
+  ↓
+shipped
+  ↓
+delivered
+  ↓
+completed
+
+Cancellation paths:
+pending_payment → cancelled (on timeout)
+payment_confirmed → refunded (on cancellation)
+----
+
+**Database Schema (simplified):**
+
+[source,sql]
+----
+CREATE TABLE orders (
+  id UUID PRIMARY KEY,
+  customer_id UUID NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  total_amount_cents INTEGER NOT NULL,
+  stripe_session_id VARCHAR(255),
+  stripe_payment_intent_id VARCHAR(255),
+  erp_order_id VARCHAR(100),
+  erp_synced_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  paid_at TIMESTAMP,
+  INDEX idx_status (status),
+  INDEX idx_stripe_session (stripe_session_id),
+  FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE order_items (
+  id UUID PRIMARY KEY,
+  order_id UUID NOT NULL,
+  product_id UUID NOT NULL,
+  sku VARCHAR(50) NOT NULL,
+  quantity INTEGER NOT NULL,
+  price_cents INTEGER NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+);
+----

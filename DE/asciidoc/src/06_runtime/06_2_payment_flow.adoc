@@ -1,0 +1,13 @@
+=== 6.2 Zahlungsabwicklung
+
+==== Szenario
+
+[TBD: Typisches Zahlungsszenario beschreiben]
+
+==== Ablauf
+
+[TBD: Schrittweisen Ablauf der Zahlungsabwicklung dokumentieren]
+
+==== Beteiligte Komponenten
+
+[TBD: An der Zahlungsabwicklung beteiligte Komponenten auflisten]

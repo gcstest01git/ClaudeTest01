@@ -1,0 +1,80 @@
+name: Check Documentation Symmetry
+
+on:
+  pull_request:
+    paths:
+      - 'DE/asciidoc/**'
+      - 'EN/asciidoc/**'
+      - 'images/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'DE/asciidoc/**'
+      - 'EN/asciidoc/**'
+      - 'images/**'
+
+jobs:
+  symmetry-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check DE/EN file count symmetry
+        run: |
+          DE_COUNT=$(find DE/asciidoc/src -type f -name "*.adoc" | wc -l)
+          EN_COUNT=$(find EN/asciidoc/src -type f -name "*.adoc" | wc -l)
+
+          if [ "$DE_COUNT" -ne "$EN_COUNT" ]; then
+            echo "❌ Asymmetrische Struktur: DE=$DE_COUNT, EN=$EN_COUNT"
+            exit 1
+          fi
+
+          echo "✓ Struktur symmetrisch: $DE_COUNT Dateien in beiden Sprachen"
+
+      - name: Check DE/EN filenames match
+        run: |
+          DE_NAMES=$(find DE/asciidoc/src -type f -name "*.adoc" | xargs -I {} basename {} | sort)
+          EN_NAMES=$(find EN/asciidoc/src -type f -name "*.adoc" | xargs -I {} basename {} | sort)
+
+          if [ "$DE_NAMES" != "$EN_NAMES" ]; then
+            echo "❌ Dateinamen unterscheiden sich"
+            exit 1
+          fi
+
+          echo "✓ Dateinamen identisch"
+
+      - name: Check folder structure symmetry
+        run: |
+          DE_DIRS=$(find DE/asciidoc/src -type d | sort)
+          EN_DIRS=$(find EN/asciidoc/src -type d | sort)
+
+          if [ "$(echo "$DE_DIRS" | wc -l)" -ne "$(echo "$EN_DIRS" | wc -l)" ]; then
+            echo "❌ Ordnerstruktur unterscheidet sich"
+            exit 1
+          fi
+
+          echo "✓ Ordnerstruktur symmetrisch"
+
+  build-documentation:
+    needs: symmetry-check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build HTML and PDF (Gradle)
+        run: chmod +x ./gradlew && ./gradlew buildAll
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: build/

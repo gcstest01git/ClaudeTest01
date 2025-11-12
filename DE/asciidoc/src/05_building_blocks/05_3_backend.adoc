@@ -1,0 +1,17 @@
+=== 5.3 Backend
+
+==== Zweck
+
+[TBD: Zweck der Backend-Komponente beschreiben]
+
+==== Zuständigkeiten
+
+[TBD: Hauptverantwortlichkeiten des Backends auflisten]
+
+==== Schnittstellen
+
+[TBD: REST-API-Endpunkte dokumentieren]
+
+==== Technologiestack
+
+[TBD: Verwendete Backend-Technologien auflisten]

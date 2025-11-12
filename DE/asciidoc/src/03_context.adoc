@@ -1,0 +1,9 @@
+== 3. Kontextabgrenzung
+
+=== 3.1 Fachlicher Kontext
+
+[TBD: Fachliche Schnittstellen und externe Systeme beschreiben]
+
+=== 3.2 Technischer Kontext
+
+[TBD: Technische Schnittstellen und Protokolle beschreiben]

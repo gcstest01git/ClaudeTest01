@@ -1,0 +1,13 @@
+=== 6.3 Integrationsabläufe
+
+==== Szenario
+
+[TBD: Typisches Integrationsszenario beschreiben]
+
+==== Ablauf
+
+[TBD: Schrittweisen Ablauf der Systemintegration dokumentieren]
+
+==== Datensynchronisation
+
+[TBD: Datensynchronisationsmechanismen beschreiben]
