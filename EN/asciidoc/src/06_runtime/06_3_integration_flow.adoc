@@ -1,0 +1,13 @@
+=== 6.3 Integration Flows
+
+==== Scenario
+
+[TBD: Describe typical integration scenario]
+
+==== Flow
+
+[TBD: Document step-by-step system integration flow]
+
+==== Data Synchronization
+
+[TBD: Describe data synchronization mechanisms]

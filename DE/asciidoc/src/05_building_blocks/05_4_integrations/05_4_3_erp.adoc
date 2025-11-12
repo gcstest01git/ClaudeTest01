@@ -1,0 +1,21 @@
+==== 5.4.3 ERP-Integration
+
+===== Zweck
+
+[TBD: Zweck der ERP-Integration beschreiben]
+
+===== Zuständigkeiten
+
+[TBD: Verantwortlichkeiten auflisten]
+
+===== Schnittstellen
+
+[TBD: API-Schnittstellen dokumentieren]
+
+===== Datenfluss
+
+[TBD: Datenfluss zwischen System und ERP beschreiben]
+
+===== Fehlerbehandlung
+
+[TBD: Fehlerszenarien und Maßnahmen beschreiben]

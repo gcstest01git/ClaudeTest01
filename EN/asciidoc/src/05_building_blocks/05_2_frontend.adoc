@@ -1,0 +1,17 @@
+=== 5.2 Frontend
+
+==== Purpose
+
+[TBD: Describe purpose of the frontend component]
+
+==== Responsibilities
+
+[TBD: List main responsibilities of the frontend]
+
+==== Interfaces
+
+[TBD: Document API interfaces to backend]
+
+==== Technology Stack
+
+[TBD: List frontend technologies used]

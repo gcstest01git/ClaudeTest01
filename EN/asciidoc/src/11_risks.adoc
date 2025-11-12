@@ -1,0 +1,17 @@
+== 11. Risks and Technical Debt
+
+=== 11.1 Identified Risks
+
+[cols="2,3,2,3",options="header"]
+|===
+|Risk |Description |Probability |Actions
+
+|[TBD]
+|[TBD]
+|[High/Medium/Low]
+|[TBD]
+|===
+
+=== 11.2 Technical Debt
+
+[TBD: Document known technical debt]

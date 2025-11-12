@@ -1,0 +1,17 @@
+=== 8.1 Logging and Monitoring
+
+==== Logging Strategy
+
+[TBD: Describe logging strategy]
+
+==== Log Levels
+
+[TBD: Document log levels used]
+
+==== Monitoring
+
+[TBD: Describe monitoring approach]
+
+==== Metrics
+
+[TBD: List important metrics]

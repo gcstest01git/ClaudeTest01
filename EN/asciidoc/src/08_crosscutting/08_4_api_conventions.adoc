@@ -1,0 +1,17 @@
+=== 8.4 API Conventions
+
+==== REST API Design
+
+[TBD: Describe REST API design principles]
+
+==== Naming Conventions
+
+[TBD: Document endpoint naming conventions]
+
+==== Versioning
+
+[TBD: Describe API versioning strategy]
+
+==== Documentation
+
+[TBD: Describe API documentation approach]

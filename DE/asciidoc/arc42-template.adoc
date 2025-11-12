@@ -1,0 +1,130 @@
+= Arc42 Architekturdokumentation: B2B E-Commerce Data Pipeline
+:doctype: book
+:sectnums:
+:sectanchors:
+:toc: left
+:toclevels: 3
+:icons: font
+:imagesdir: ../../images
+:source-highlighter: highlight.js
+
+// Metadaten
+include::version.properties[]
+
+// Dokumentversion und Datum
+[.text-right]
+_Version {version}, Build-Datum: {build.date}, Sprache: {language}_
+
+<<<
+
+// Kapitel 1: Einführung und Ziele
+include::src/01_introduction.adoc[]
+
+<<<
+
+// Kapitel 2: Randbedingungen
+include::src/02_constraints.adoc[]
+
+<<<
+
+// Kapitel 3: Kontextabgrenzung
+include::src/03_context.adoc[]
+
+<<<
+
+// Kapitel 4: Lösungsstrategie
+include::src/04_solution_strategy.adoc[]
+
+<<<
+
+// Kapitel 5: Bausteinsicht
+== 5. Bausteinsicht
+
+include::src/05_building_blocks/05_1_overview.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_2_frontend.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_3_backend.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations/05_4_1_stripe.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations/05_4_2_marketplace.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations/05_4_3_erp.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_5_data_layer.adoc[]
+
+<<<
+
+// Kapitel 6: Laufzeitsicht
+== 6. Laufzeitsicht
+
+include::src/06_runtime/06_1_order_flow.adoc[]
+
+<<<
+
+include::src/06_runtime/06_2_payment_flow.adoc[]
+
+<<<
+
+include::src/06_runtime/06_3_integration_flow.adoc[]
+
+<<<
+
+// Kapitel 7: Verteilungssicht
+include::src/07_deployment.adoc[]
+
+<<<
+
+// Kapitel 8: Querschnittliche Konzepte
+== 8. Querschnittliche Konzepte
+
+include::src/08_crosscutting/08_1_logging.adoc[]
+
+<<<
+
+include::src/08_crosscutting/08_2_error_handling.adoc[]
+
+<<<
+
+include::src/08_crosscutting/08_3_authentication.adoc[]
+
+<<<
+
+include::src/08_crosscutting/08_4_api_conventions.adoc[]
+
+<<<
+
+// Kapitel 9: Architekturentscheidungen
+include::src/09_decisions.adoc[]
+
+<<<
+
+// Kapitel 10: Qualitätsanforderungen
+include::src/10_quality.adoc[]
+
+<<<
+
+// Kapitel 11: Risiken und technische Schulden
+include::src/11_risks.adoc[]
+
+<<<
+
+// Kapitel 12: Glossar
+include::src/12_glossary.adoc[]

@@ -1,0 +1,17 @@
+=== 8.4 API-Konventionen
+
+==== REST-API-Design
+
+[TBD: REST-API-Design-Prinzipien beschreiben]
+
+==== Namenskonventionen
+
+[TBD: Namenskonventionen für Endpunkte dokumentieren]
+
+==== Versionierung
+
+[TBD: API-Versionierungsstrategie beschreiben]
+
+==== Dokumentation
+
+[TBD: API-Dokumentationsansatz beschreiben]

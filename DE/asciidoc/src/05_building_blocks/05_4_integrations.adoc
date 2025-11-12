@@ -1,0 +1,11 @@
+=== 5.4 Externe Integrationen
+
+==== Übersicht
+
+Das System integriert sich mit mehreren externen Diensten und Systemen:
+
+* **Stripe**: Zahlungsabwicklung
+* **Marktplatz-Systeme**: Produktsynchronisation und Bestellverwaltung
+* **ERP-Systeme**: Geschäftsprozessintegration
+
+[TBD: Detaillierte Übersicht über alle Integrationen]

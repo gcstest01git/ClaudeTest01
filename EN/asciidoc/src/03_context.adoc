@@ -1,0 +1,9 @@
+== 3. Context and Scope
+
+=== 3.1 Business Context
+
+[TBD: Describe business interfaces and external systems]
+
+=== 3.2 Technical Context
+
+[TBD: Describe technical interfaces and protocols]

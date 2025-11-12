@@ -1,0 +1,18 @@
+== 12. Glossary
+
+[cols="2,5",options="header"]
+|===
+|Term |Definition
+
+|API
+|Application Programming Interface - Interface for application programming
+
+|ERP
+|Enterprise Resource Planning - System for managing business processes
+
+|REST
+|Representational State Transfer - Architectural style for distributed systems
+
+|[TBD]
+|[TBD: Add additional project-specific terms]
+|===

@@ -1,0 +1,130 @@
+= Arc42 Architecture Documentation: B2B E-Commerce Data Pipeline
+:doctype: book
+:sectnums:
+:sectanchors:
+:toc: left
+:toclevels: 3
+:icons: font
+:imagesdir: ../../images
+:source-highlighter: highlight.js
+
+// Metadata
+include::version.properties[]
+
+// Document version and date
+[.text-right]
+_Version {version}, Build date: {build.date}, Language: {language}_
+
+<<<
+
+// Chapter 1: Introduction and Goals
+include::src/01_introduction.adoc[]
+
+<<<
+
+// Chapter 2: Architecture Constraints
+include::src/02_constraints.adoc[]
+
+<<<
+
+// Chapter 3: Context and Scope
+include::src/03_context.adoc[]
+
+<<<
+
+// Chapter 4: Solution Strategy
+include::src/04_solution_strategy.adoc[]
+
+<<<
+
+// Chapter 5: Building Block View
+== 5. Building Block View
+
+include::src/05_building_blocks/05_1_overview.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_2_frontend.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_3_backend.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations/05_4_1_stripe.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations/05_4_2_marketplace.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_4_integrations/05_4_3_erp.adoc[]
+
+<<<
+
+include::src/05_building_blocks/05_5_data_layer.adoc[]
+
+<<<
+
+// Chapter 6: Runtime View
+== 6. Runtime View
+
+include::src/06_runtime/06_1_order_flow.adoc[]
+
+<<<
+
+include::src/06_runtime/06_2_payment_flow.adoc[]
+
+<<<
+
+include::src/06_runtime/06_3_integration_flow.adoc[]
+
+<<<
+
+// Chapter 7: Deployment View
+include::src/07_deployment.adoc[]
+
+<<<
+
+// Chapter 8: Cross-cutting Concepts
+== 8. Cross-cutting Concepts
+
+include::src/08_crosscutting/08_1_logging.adoc[]
+
+<<<
+
+include::src/08_crosscutting/08_2_error_handling.adoc[]
+
+<<<
+
+include::src/08_crosscutting/08_3_authentication.adoc[]
+
+<<<
+
+include::src/08_crosscutting/08_4_api_conventions.adoc[]
+
+<<<
+
+// Chapter 9: Architecture Decisions
+include::src/09_decisions.adoc[]
+
+<<<
+
+// Chapter 10: Quality Requirements
+include::src/10_quality.adoc[]
+
+<<<
+
+// Chapter 11: Risks and Technical Debt
+include::src/11_risks.adoc[]
+
+<<<
+
+// Chapter 12: Glossary
+include::src/12_glossary.adoc[]

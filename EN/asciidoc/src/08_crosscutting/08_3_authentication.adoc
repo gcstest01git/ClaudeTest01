@@ -1,0 +1,17 @@
+=== 8.3 Authentication and Authorization
+
+==== Authentication Mechanisms
+
+[TBD: Describe authentication mechanisms used]
+
+==== Authorization
+
+[TBD: Document authorization model]
+
+==== Session Management
+
+[TBD: Describe session management]
+
+==== Security Policies
+
+[TBD: List security policies]

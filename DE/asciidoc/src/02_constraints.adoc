@@ -1,0 +1,13 @@
+== 2. Randbedingungen
+
+=== 2.1 Organisatorische Randbedingungen
+
+[TBD: Organisatorische Constraints hinzufügen]
+
+=== 2.2 Technische Randbedingungen
+
+[TBD: Technische Constraints hinzufügen]
+
+=== 2.3 Konventionen
+
+[TBD: Konventionen hinzufügen]

@@ -1,0 +1,13 @@
+=== 6.2 Payment Processing
+
+==== Scenario
+
+[TBD: Describe typical payment scenario]
+
+==== Flow
+
+[TBD: Document step-by-step payment processing flow]
+
+==== Involved Components
+
+[TBD: List components involved in payment processing]

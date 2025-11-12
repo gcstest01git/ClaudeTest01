@@ -1,0 +1,69 @@
+plugins {
+  id 'org.asciidoctor.jvm.convert' version '4.0.2'
+  id 'org.asciidoctor.jvm.pdf' version '4.0.2'
+}
+
+repositories {
+  mavenCentral()
+}
+
+asciidoctorj {
+  version = '2.5.13'
+}
+
+def languages = project.hasProperty('languages') ?
+  project.property('languages').split(',').collect { it.trim() } :
+  ['DE', 'EN']
+
+task buildAll {
+  dependsOn languages.collect { lang -> "asciidoctorHtml${lang}" }
+  dependsOn languages.collect { lang -> "asciidoctorPdf${lang}" }
+}
+
+languages.each { lang ->
+  task "asciidoctorHtml${lang}"(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
+    sourceDir = file("${lang}/asciidoc")
+    sources {
+      include 'arc42-template.adoc'
+    }
+    outputDir = file("build/${lang}/html")
+    options = [
+      safe: 'unsafe',
+      doctype: 'book',
+      backend: 'html5',
+      attributes: [
+        imagesdir: "../../images",
+        'allow-uri-read': '',
+        'numbered': '',
+        'toc': 'left',
+        'icons': 'font'
+      ]
+    ]
+  }
+
+  task "asciidoctorPdf${lang}"(type: org.asciidoctor.gradle.jvm.pdf.AsciidoctorPdfTask) {
+    sourceDir = file("${lang}/asciidoc")
+    sources {
+      include 'arc42-template.adoc'
+    }
+    outputDir = file("build/${lang}/pdf")
+    options = [
+      safe: 'unsafe',
+      doctype: 'book',
+      backend: 'pdf',
+      attributes: [
+        imagesdir: "../../images",
+        'allow-uri-read': '',
+        'numbered': '',
+        'toc': '',
+        'icons': 'font'
+      ]
+    ]
+  }
+}
+
+task clean {
+  doLast {
+    delete 'build'
+  }
+}

@@ -1,0 +1,13 @@
+== 2. Architecture Constraints
+
+=== 2.1 Organizational Constraints
+
+[TBD: Add organizational constraints]
+
+=== 2.2 Technical Constraints
+
+[TBD: Add technical constraints]
+
+=== 2.3 Conventions
+
+[TBD: Add conventions]

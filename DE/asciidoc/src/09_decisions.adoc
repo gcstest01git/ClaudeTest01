@@ -1,0 +1,15 @@
+== 9. Architekturentscheidungen
+
+=== ADR-001: [Titel]
+
+**Status**: [Proposed/Accepted/Deprecated/Superseded]
+
+**Kontext**: [TBD: Kontext der Entscheidung beschreiben]
+
+**Entscheidung**: [TBD: Getroffene Entscheidung dokumentieren]
+
+**Konsequenzen**: [TBD: Konsequenzen der Entscheidung auflisten]
+
+---
+
+[TBD: Weitere wichtige Architekturentscheidungen dokumentieren]

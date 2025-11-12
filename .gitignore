@@ -1,0 +1,12 @@
+/build/
+.gradle/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+node_modules/
+Thumbs.db
+*.tmp
+.env.local

@@ -1,0 +1,17 @@
+=== 5.3 Backend
+
+==== Purpose
+
+[TBD: Describe purpose of the backend component]
+
+==== Responsibilities
+
+[TBD: List main responsibilities of the backend]
+
+==== Interfaces
+
+[TBD: Document REST API endpoints]
+
+==== Technology Stack
+
+[TBD: List backend technologies used]

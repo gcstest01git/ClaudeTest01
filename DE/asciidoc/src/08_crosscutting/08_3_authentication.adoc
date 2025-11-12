@@ -1,0 +1,17 @@
+=== 8.3 Authentifizierung und Autorisierung
+
+==== Authentifizierungsmechanismen
+
+[TBD: Verwendete Authentifizierungsmechanismen beschreiben]
+
+==== Autorisierung
+
+[TBD: Autorisierungsmodell dokumentieren]
+
+==== Session-Management
+
+[TBD: Session-Verwaltung beschreiben]
+
+==== Sicherheitsrichtlinien
+
+[TBD: Sicherheitsrichtlinien auflisten]
