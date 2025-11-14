@@ -65,7 +65,7 @@ arc42-masterdata/
 │   └── asciidoc/
 │       ├── arc42-template.adoc      # Main German template (includes all chapters)
 │       ├── version.properties       # Version metadata (v1.0, 2025-11-12)
-│       └── src/                     # Chapter source files (25 files)
+│       └── src/                     # Chapter source files (24 files)
 │           ├── 01_introduction.adoc
 │           ├── 02_constraints.adoc
 │           ├── 03_context.adoc
@@ -96,7 +96,7 @@ arc42-masterdata/
 │           └── 12_glossary.adoc
 │
 ├── EN/                              # English documentation (IDENTICAL structure to DE/)
-│   └── asciidoc/                    # Same 25 files, English content
+│   └── asciidoc/                    # Same 24 files, English content
 │       ├── arc42-template.adoc
 │       ├── version.properties
 │       └── src/                     # Mirror of DE/asciidoc/src/
@@ -478,7 +478,7 @@ org.gradle.caching=true
 
 **Example output:**
 ```
-✓ Struktur symmetrisch: 25 Dateien in beiden Sprachen
+✓ Struktur symmetrisch: 24 Dateien in beiden Sprachen
 ✓ Dateinamen identisch
 ✓ Ordnerstruktur symmetrisch
 ```
@@ -519,7 +519,7 @@ org.gradle.caching=true
 
 - **Main branch:** `main` (protected)
 - **Feature branches:** Use descriptive names (e.g., `feature/add-redis-caching`, `docs/update-stripe-integration`)
-- **Current branch:** `claude/create-codebase-documentation-016X3Bex1WcbCbicE2aoiujL`
+- **Current branch:** `claude/update-claude-md-01QGqdud5FowswH9D3fktibA`
 
 ### Commit Message Format
 
@@ -778,7 +778,7 @@ If CI fails:
 touch DE/asciidoc/src/09_1_new_decision.adoc
 ```
 
-**Result:** CI fails with "Asymmetrische Struktur: DE=26, EN=25"
+**Result:** CI fails with "Asymmetrische Struktur: DE=25, EN=24"
 
 **Solution:**
 ```bash
@@ -900,7 +900,7 @@ git push -u origin <branch-name>
 ```bash
 echo "DE files: $(find DE/asciidoc/src -name '*.adoc' | wc -l)"
 echo "EN files: $(find EN/asciidoc/src -name '*.adoc' | wc -l)"
-# Should show: 25 files each (as of 2025-11-14)
+# Should show: 24 files each (as of 2025-11-14)
 ```
 
 ### Image Reference Templates
@@ -973,6 +973,7 @@ When users request changes, follow this decision tree:
 3. **Performance:** <500ms API response time, handle 50K orders/day
 4. **Integrability:** REST APIs, webhook support, multiple ERP systems
 5. **Maintainability:** CI/CD, modular architecture, comprehensive tests
+6. **Print Optimization:** Business documents (orders, invoices) must be printable with high readability on physical media, DIN A4 format, min 10pt font, @media print CSS rules
 
 ### Arc42 Chapter Mapping
 
@@ -1027,4 +1028,4 @@ As an AI assistant working in this repository, I pledge to:
 
 **Last Updated:** 2025-11-14
 **Repository Version:** 1.0
-**Branch:** `claude/create-codebase-documentation-016X3Bex1WcbCbicE2aoiujL`
+**Branch:** `claude/update-claude-md-01QGqdud5FowswH9D3fktibA`
