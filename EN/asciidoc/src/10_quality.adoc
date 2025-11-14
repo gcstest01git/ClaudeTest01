@@ -21,3 +21,72 @@
 ==== Maintainability
 
 [TBD: Describe maintainability scenarios]
+
+==== Print Optimization (Print Styles)
+
+**Quality Goal:** High readability of business-critical documents on physical media (printed).
+
+**Quality Attributes:**
+
+[cols="2,3,2",options="header"]
+|===
+|Attribute |Requirement |Priority
+
+|**Usability**
+|High readability on physical media. Content is complete and readable without cut-off columns.
+|High
+
+|**Testability**
+|Full test coverage of `@media print` stylesheets. Automated visual regression tests for print views.
+|Medium
+
+|**Compatibility**
+|Correct rendering in all common browsers (Chrome, Firefox, Safari, Edge) when using the browser print function.
+|High
+|===
+
+**Detailed Specification:**
+
+For all views that contain business-critical data (order summaries, invoices, payment confirmations, etc.), the following requirements apply for printing via standard browser print function:
+
+* **Page Format:** Content must fit clearly without cut-off columns on **DIN A4 format** (210 × 297 mm).
+* **Element Suppression:** Unnecessary elements (navigation, sidebars, banners, pop-ups, buttons) are excluded from print via `@media print` CSS rules.
+* **Typography:** Font size must scale to at least **10pt** to be readable on printed paper.
+* **Page Breaks:**
+  ** Use of `page-break-inside: avoid` for tables and important content blocks to prevent ugly breaks.
+  ** Use of `page-break-after: always` to ensure clear document sections (e.g., after invoice header).
+* **Colors:** Background colors are removed or reduced to grayscale to minimize ink consumption.
+* **Links:** URLs are spelled out in footnotes or displayed as full text (e.g., via `content: attr(href)`).
+
+**Quality Scenarios:**
+
+[cols="1,4,3",options="header"]
+|===
+|ID |Scenario |Expected Result
+
+|QS-PRINT-1
+|A clerk opens the order summary and prints it via browser print function (Ctrl+P).
+|The printed document contains all order items completely and legibly on a maximum of 2 DIN A4 pages. Navigation and sidebar are missing.
+
+|QS-PRINT-2
+|An invoice with 15 items is printed.
+|The invoice table is not torn by page breaks. Each row remains intact (via `page-break-inside: avoid`).
+
+|QS-PRINT-3
+|A manager prints a payment confirmation for archival purposes.
+|The document is clearly structured, has a font size of at least 10pt, and contains no visual artifacts (cut-off columns, overlapping text).
+
+|QS-PRINT-4
+|An automated test validates the print view of the order summary.
+|The test creates a PDF via headless Chrome and compares it with a reference screenshot. Deviations >5% result in a test error.
+|===
+
+**Technical Implementation:**
+
+* Separate CSS file `print.css` with `@media print` rules
+* Use of CSS properties:
+  ** `display: none` for non-printable elements
+  ** `page-break-inside: avoid`, `page-break-after: always`
+  ** `font-size: 10pt` or larger
+  ** `width: 100%` for tables (no fixed pixel values)
+* Automated tests with Puppeteer/Playwright for visual regression testing

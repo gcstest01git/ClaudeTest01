@@ -46,6 +46,10 @@ The following table describes the five most important quality goals for the syst
 |5
 |**Maintainability**
 |New integrations and features must be deployed without system outages. Clear modularization and comprehensive tests reduce regression risks. CI/CD pipeline enables multiple deployments per week.
+
+|6
+|**Print Optimization (Print Styles)**
+|Business-critical documents (order summaries, invoices) must be printable with high readability on physical media. Content fits on DIN A4 format without cut-off columns. Unnecessary elements (navigation, banners) are excluded via `@media print`. Font size minimum 10pt, `page-break-inside: avoid` for tables.
 |===
 
 === 1.3 Stakeholders

@@ -21,3 +21,72 @@
 ==== Wartbarkeit
 
 [TBD: Wartbarkeits-Szenarien beschreiben]
+
+==== Druck-Optimierung (Print Styles)
+
+**Qualitätsziel:** Hohe Lesbarkeit geschäftsrelevanter Dokumente auf physischen Medien (gedruckt).
+
+**Qualitätsattribute:**
+
+[cols="2,3,2",options="header"]
+|===
+|Attribut |Anforderung |Priorität
+
+|**Benutzbarkeit (Usability)**
+|Hohe Lesbarkeit auf physischen Medien. Inhalte sind vollständig und ohne abgeschnittene Spalten lesbar.
+|Hoch
+
+|**Testbarkeit**
+|Vollständige Testabdeckung der `@media print` Stylesheets. Automatisierte visuelle Regressionstests für Druckansichten.
+|Mittel
+
+|**Kompatibilität**
+|Korrekte Darstellung in allen gängigen Browsern (Chrome, Firefox, Safari, Edge) bei Verwendung der Browser-Druckfunktion.
+|Hoch
+|===
+
+**Detaillierte Spezifikation:**
+
+Für alle Views, die geschäftsrelevante Daten (Bestellübersichten, Rechnungen, Zahlungsbestätigungen, etc.) enthalten, gelten folgende Anforderungen für den Ausdruck via Standard-Browser-Druckfunktion:
+
+* **Seitenformat:** Der Inhalt muss klar und ohne abgeschnittene Spalten auf das **DIN A4-Format** (210 × 297 mm) passen.
+* **Element-Unterdrückung:** Unnötige Elemente (Navigation, Sidebars, Banner, Pop-ups, Buttons) sind über `@media print` CSS-Regeln vom Ausdruck auszuschließen.
+* **Typografie:** Die Schriftgröße muss auf mindestens **10pt** skaliert werden, um auf gedrucktem Papier lesbar zu sein.
+* **Seitenumbrüche:**
+  ** Verwendung von `page-break-inside: avoid` bei Tabellen und wichtigen Inhaltsblöcken, um unschöne Trennungen zu vermeiden.
+  ** Verwendung von `page-break-after: always` zur Sicherstellung klarer Dokumentabschnitte (z.B. nach Rechnungskopf).
+* **Farben:** Hintergrundfarben werden entfernt oder auf Graustufen reduziert, um Tintenverbrauch zu minimieren.
+* **Links:** URLs werden in Fußnoten ausgeschrieben oder als Volltext dargestellt (z.B. via `content: attr(href)`).
+
+**Qualitätsszenarien:**
+
+[cols="1,4,3",options="header"]
+|===
+|ID |Szenario |Erwartetes Ergebnis
+
+|QS-PRINT-1
+|Ein Sachbearbeiter öffnet die Bestellübersicht und druckt sie via Browser-Druckfunktion (Strg+P).
+|Das gedruckte Dokument enthält alle Bestellpositionen vollständig und lesbar auf maximal 2 DIN A4-Seiten. Navigation und Sidebar fehlen.
+
+|QS-PRINT-2
+|Eine Rechnung mit 15 Positionen wird gedruckt.
+|Die Rechnungstabelle wird nicht durch Seitenumbrüche zerrissen. Jede Zeile bleibt intakt (via `page-break-inside: avoid`).
+
+|QS-PRINT-3
+|Ein Manager druckt eine Zahlungsbestätigung für Archivierungszwecke.
+|Das Dokument ist klar strukturiert, hat eine Schriftgröße von mindestens 10pt und enthält keine visuellen Artefakte (abgeschnittene Spalten, überlappende Texte).
+
+|QS-PRINT-4
+|Ein automatisierter Test validiert die Druckansicht der Bestellübersicht.
+|Der Test erstellt ein PDF via Headless Chrome und vergleicht es mit einem Referenz-Screenshot. Abweichungen >5% führen zu einem Testfehler.
+|===
+
+**Technische Umsetzung:**
+
+* Separate CSS-Datei `print.css` mit `@media print` Regeln
+* Verwendung von CSS-Eigenschaften:
+  ** `display: none` für nicht-druckbare Elemente
+  ** `page-break-inside: avoid`, `page-break-after: always`
+  ** `font-size: 10pt` oder größer
+  ** `width: 100%` für Tabellen (keine fixen Pixelwerte)
+* Automatisierte Tests mit Puppeteer/Playwright für visuelle Regressionstests

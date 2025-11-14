@@ -46,6 +46,10 @@ Die folgende Tabelle beschreibt die fünf wichtigsten Qualitätsziele für das S
 |5
 |**Wartbarkeit**
 |Neue Integrationen und Features müssen ohne Systemausfälle deployt werden können. Klare Modularisierung und umfassende Tests reduzieren Regression-Risiken. CI/CD-Pipeline ermöglicht mehrere Deployments pro Woche.
+
+|6
+|**Druck-Optimierung (Print Styles)**
+|Geschäftsrelevante Dokumente (Bestellübersichten, Rechnungen) müssen druckbar sein mit hoher Lesbarkeit auf physischen Medien. Inhalte passen auf DIN A4-Format ohne abgeschnittene Spalten. Unnötige Elemente (Navigation, Banner) werden über `@media print` ausgeschlossen. Schriftgröße mindestens 10pt, `page-break-inside: avoid` bei Tabellen.
 |===
 
 === 1.3 Stakeholder
